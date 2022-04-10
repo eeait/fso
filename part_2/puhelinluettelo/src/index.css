@@ -1,0 +1,33 @@
+h2 {
+    color: peru;
+    font-family: Arial;
+    font-style: italic;
+}
+
+.person {
+    padding-top: 10px;
+    font-size: 15px;
+    font-family: Arial;
+}
+
+.negative {
+    color: palevioletred;
+    font-size: 20px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-style: italic;
+    border-style: solid;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.positive {
+    color: lightseagreen;
+    font-size: 20px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-style: italic;
+    border-style: solid;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
