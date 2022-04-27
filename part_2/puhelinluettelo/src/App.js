@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import noteService from "./services/persons"
+import personService from "./services/persons"
 
 const FilterForm = (props) => {
   return (
@@ -76,7 +76,7 @@ const App = () => {
   const [notificationNature, setNotificationNature] = useState("")
 
   useEffect(() => {
-    noteService
+    personService
       .getAll()
       .then(response => {
         setPersons(response.data)
@@ -110,13 +110,18 @@ const App = () => {
     }
     const personObject = {name: newName, number: newNumber}
     //console.log(nameObject)
-    noteService
+    personService
       .create(personObject)
       .then(response => {
         setPersons(persons.concat(response.data))
         setNewName("")
         setNewNumber("")
         notify(`Successfully added ${newName}`, "positive", 5000)
+      })
+      .catch(error => {
+        //console.log("About to notify error")
+        //console.log(error.response)
+        notify(error.response.data.error, "negative", 5000)
       })
   }
 
@@ -126,7 +131,8 @@ const App = () => {
     if (! window.confirm(`Remove ${personName}?`)) {
       return
     }
-    noteService
+    //console.log(`Removed ${id}`)
+    personService
       .remove(id)
       .then(response => {
         setPersons(persons.filter(person => person.id !== id))
@@ -138,7 +144,7 @@ const App = () => {
     const person = persons.find(p => p.id === id)
     const editedPerson = { ...person, number: changedNumber}
     //console.log("trying to edit")
-    noteService
+    personService
       .update(id, editedPerson)
       .then(response => {
         setPersons(persons.map(p => p.id === id ? response.data : p))
