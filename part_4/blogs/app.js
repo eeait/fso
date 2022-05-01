@@ -14,7 +14,7 @@ mongoose
     info("Connected to MongoDB")
   })
   .catch((error) => {
-    info("Error connecting to MongoDB:", error.message)
+    logerror("Error connecting to MongoDB:", error.message)
   })
 
 app.use(cors())

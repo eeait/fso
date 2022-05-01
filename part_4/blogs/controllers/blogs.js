@@ -7,12 +7,40 @@ blogsRouter.get("/", (request, response) => {
   })
 })
 
-blogsRouter.post("/", (request, response) => {
-  const blog = new Blog(request.body)
+blogsRouter.post("/", async (request, response) => {
+  const body = request.body
+  if (!body.hasOwnProperty("title") || !body.hasOwnProperty("url")) {
+    response.status(400).end()
+  } else {
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes || 0,
+    })
+    const savedBlog = await blog.save()
+    response.status(201).json(savedBlog)
+  }
+})
 
-  blog.save().then((result) => {
-    response.status(201).json(result)
+blogsRouter.delete("/:id", async (request, response) => {
+  await Blog.findByIdAndRemove(request.params.id)
+  response.status(204).end()
+})
+
+blogsRouter.put("/:id", (request, response) => {
+  const body = request.body
+  const blog = new Blog({
+    _id: request.params.id,
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
   })
+  Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+    .then((updatedBlog) => {
+      response.json(updatedBlog)
+    })
 })
 
 module.exports = blogsRouter
