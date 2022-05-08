@@ -1,9 +1,0 @@
-PUT http://localhost:3001/api/blogs/626ebc0eb472ee8d085fba5a
-Content-Type: application/json
-
-{
-    "title": "Blog",
-    "author": "eaittok",
-    "url": "google.com",
-    "likes": 3
-}

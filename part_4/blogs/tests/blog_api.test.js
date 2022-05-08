@@ -3,6 +3,7 @@ const supertest = require("supertest")
 const app = require("../app")
 const api = supertest(app)
 const Blog = require("../models/blog")
+const User = require("../models/user")
 
 const initialBlogs = [
   {
@@ -18,13 +19,33 @@ const initialBlogs = [
     likes: 5,
   },
 ]
+const initialUsers = [
+  {
+    username: "london",
+    name: "London Heathrow",
+    password: "Airport",
+  },
+  {
+    username: "berlin",
+    name: "Berlin Tegel",
+    password: "Flughafen",
+  },
+]
 
 beforeEach(async () => {
+  // init
   await Blog.deleteMany({})
   let blogObject = new Blog(initialBlogs[0])
   await blogObject.save()
   blogObject = new Blog(initialBlogs[1])
   await blogObject.save()
+
+  // init users
+  await User.deleteMany({})
+  let userObject = new User(initialUsers[0])
+  await userObject.save()
+  userObject = new User(initialUsers[1])
+  await userObject.save()
 })
 
 test("correct number of blogs are returned as json", async () => {
@@ -45,6 +66,48 @@ test("key 'id' is found", async () => {
 })
 
 test("blogs can be added", async () => {
+  await api.post("/api/users").send({
+    username: "Helsinki",
+    name: "e",
+    password: "Lentokenttä",
+  })
+  const tokenIncluded = await api.post("/api/login").send({
+    username: "Helsinki",
+    password: "Lentokenttä",
+  })
+  const token = tokenIncluded.body.token
+  console.log(token)
+
+  let blogObject = {
+    title: "Canonical string reduction",
+    author: "Edsger W. Dijkstra",
+    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+    likes: 12,
+  }
+  await api
+    .post("/api/blogs")
+    .set("Authorization", `bearer ${token}`)
+    .send(blogObject)
+    .expect(201)
+    .expect("Content-Type", /application\/json/)
+
+  const response = await api.get("/api/blogs")
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+})
+
+test("untokened returns 401", async () => {
+  await api.post("/api/users").send({
+    username: "Helsinki",
+    name: "e",
+    password: "Lentokenttä",
+  })
+  const tokenIncluded = await api.post("/api/login").send({
+    username: "Helsinki",
+    password: "Lentokenttä",
+  })
+  const token = tokenIncluded.body.token
+  console.log(token)
+
   let blogObject = {
     title: "Canonical string reduction",
     author: "Edsger W. Dijkstra",
@@ -54,14 +117,25 @@ test("blogs can be added", async () => {
   await api
     .post("/api/blogs")
     .send(blogObject)
-    .expect(201)
-    .expect("Content-Type", /application\/json/)
+    .expect(401)
 
   const response = await api.get("/api/blogs")
-  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  expect(response.body).toHaveLength(initialBlogs.length)
 })
 
 test("likes default to 0", async () => {
+  await api.post("/api/users").send({
+    username: "Helsinki",
+    name: "e",
+    password: "Lentokenttä",
+  })
+  const tokenIncluded = await api.post("/api/login").send({
+    username: "Helsinki",
+    password: "Lentokenttä",
+  })
+  const token = tokenIncluded.body.token
+  console.log(token)
+
   let blogObject = {
     title: "Canonical string reduction",
     author: "Edsger W. Dijkstra",
@@ -69,6 +143,7 @@ test("likes default to 0", async () => {
   }
   await api
     .post("/api/blogs")
+    .set("Authorization", `bearer ${token}`)
     .send(blogObject)
     .expect(201)
     .expect("Content-Type", /application\/json/)
@@ -86,10 +161,35 @@ test("title and url are required", async () => {
 })
 
 test("delete removes 1", async () => {
+  await api.post("/api/users").send({
+    username: "Helsinki",
+    name: "e",
+    password: "Lentokenttä",
+  })
+  const tokenIncluded = await api.post("/api/login").send({
+    username: "Helsinki",
+    password: "Lentokenttä",
+  })
+  const token = tokenIncluded.body.token
+  console.log(token)
+
+  let blogObject = {
+    title: "Canonical string reduction",
+    author: "Edsger W. Dijkstra",
+    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+  }
+  await api
+    .post("/api/blogs")
+    .set("Authorization", `bearer ${token}`)
+    .send(blogObject)
+
   const allBefore = (await api.get("/api/blogs")).body
   const lengthBefore = allBefore.length
-  const id = allBefore[0].id
-  await api.delete(`/api/blogs/${id}`).expect(204)
+  const id = allBefore[2].id
+  await api
+    .delete(`/api/blogs/${id}`)
+    .set("Authorization", `bearer ${token}`)
+    .expect(204)
 
   allAfter = (await api.get("/api/blogs")).body
   expect(allAfter.length).toBe(lengthBefore - 1)
