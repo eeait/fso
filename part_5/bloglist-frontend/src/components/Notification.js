@@ -5,7 +5,13 @@ const Notification = ({ message, nature }) => {
   if (message === "") {
     return null
   }
-  return <div className={`notification ${nature}`}>{message}</div>
+  const style = {
+    "-1": "negative",
+    0: "",
+    1: "positive",
+  }
+
+  return <div className={`notification ${style[nature.toString()]}`}>{message}</div>
 }
 
 export default Notification

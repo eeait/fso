@@ -19,7 +19,7 @@ const App = () => {
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
 
-  const notify = (message, nature, duration=5000) => {
+  const notify = (message, nature=0, duration=5000) => {
     setNotification({ message, nature })
     setTimeout(() => {
       setNotification({ message: "", nature: "" })
@@ -31,7 +31,7 @@ const App = () => {
       .getAll()
       .then((blogs) => setBlogs(blogs))
       .catch((e) => {
-        notify("Couldn't fetch blogs from the server", "negative")
+        notify("Couldn't fetch blogs from the server", -1)
         console.log("Coudn't fetch notes:", e)
       })
   }, [])
@@ -62,7 +62,7 @@ const App = () => {
       console.log("\tSuccess")
     } catch (e) {
       console.log("Wrong credentials")
-      notify("Wrong username or password", "negative")
+      notify("Wrong username or password", -1)
     }
   }
 
@@ -72,7 +72,7 @@ const App = () => {
     setUser(null)
     window.localStorage.removeItem("loggedUser")
     console.log("\tSuccess")
-    notify("Logged out successfully", "positive")
+    notify("Logged out successfully", 1)
   }
 
   const addBlog = (event) => {
@@ -89,14 +89,14 @@ const App = () => {
       .create(blog)
       .then((response) => {
         setBlogs(blogs.concat(response))
-        notify(`New blog added: ${title}`, "positive")
+        notify(`New blog added: ${title}`, 1)
         setTitle("")
         setAuthor("")
         setUrl("")
       })
       .catch((e) => {
         console.error("Adding a new blog failed:", e)
-        notify("New blog couldn't be added", "negative")
+        notify("New blog couldn't be added", -1)
       })
   }
 
