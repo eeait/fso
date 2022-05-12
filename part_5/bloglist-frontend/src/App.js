@@ -32,6 +32,7 @@ const App = () => {
       .then((blogs) => setBlogs(blogs))
       .catch((e) => {
         notify("Couldn't fetch blogs from the server", "negative")
+        console.log("Coudn't fetch notes:", e)
       })
   }, [])
 
