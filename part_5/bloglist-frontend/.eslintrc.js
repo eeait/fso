@@ -22,5 +22,6 @@ module.exports = {
     "react/prop-types": 0,
     "no-console": 0,
     "no-shadow": 0,
+    "react/react-in-jsx-scope": 0,
   },
 }

@@ -1,6 +1,8 @@
 import { useState, useEffect, React } from "react"
 import Blog from "./components/Blog"
 import Notification from "./components/Notification"
+import BlogForm from "./components/BlogForm"
+import LoginForm from "./components/LoginForm"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 
@@ -12,17 +14,17 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({
     message: "",
-    nature: "",
+    nature: 0,
   })
 
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
 
-  const notify = (message, nature=0, duration=5000) => {
+  const notify = (message, nature = 0, duration = 5000) => {
     setNotification({ message, nature })
     setTimeout(() => {
-      setNotification({ message: "", nature: "" })
+      setNotification({ message: "", nature: 0 })
     }, duration)
   }
 
@@ -107,28 +109,17 @@ const App = () => {
           message={notification.message}
           nature={notification.nature}
         />
-        <h2>Log in</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            Username
-            <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            Password
-            <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type="submit">Log in</button>
-        </form>
+        <LoginForm
+          handleSubmit={handleLogin}
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) =>
+            setUsername(target.value)
+          }
+          handlePasswordChange={({ target }) =>
+            setPassword(target.value)
+          }
+        />
       </div>
     )
   }
@@ -147,37 +138,15 @@ const App = () => {
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
-      <h3>Add a new blog</h3>
-      <form onSubmit={addBlog}>
-        <div>
-          Title
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          Author
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          URL
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">Add</button>
-      </form>
+      <BlogForm
+        handleSubmit={addBlog}
+        title={title}
+        author={author}
+        url={url}
+        handleTitleChange={({ target }) => setTitle(target.value)}
+        handleAuthorChange={({ target }) => setAuthor(target.value)}
+        handleUrlChange={({ target }) => setUrl(target.value)}
+      />
     </div>
   )
 }
