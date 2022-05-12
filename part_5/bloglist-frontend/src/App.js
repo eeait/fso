@@ -6,6 +6,7 @@ import LoginForm from "./components/LoginForm"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 import Togglable from "./components/Togglable"
+import "./app.css"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -93,7 +94,7 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
+      <div className="app">
         <Notification
           message={notification.message}
           nature={notification.nature}
@@ -114,7 +115,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="app">
       <Notification
         message={notification.message}
         nature={notification.nature}
