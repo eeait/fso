@@ -1,4 +1,4 @@
-import { useState, useEffect, React } from "react"
+import { useState, useEffect, React, useRef } from "react"
 import Blog from "./components/Blog"
 import Notification from "./components/Notification"
 import BlogForm from "./components/BlogForm"
@@ -21,6 +21,8 @@ const App = () => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+
+  const noteFormRef = useRef()
 
   const notify = (message, nature = 0, duration = 5000) => {
     setNotification({ message, nature })
@@ -92,6 +94,7 @@ const App = () => {
     blogService
       .create(blog)
       .then((response) => {
+        noteFormRef.current.toggleVisibility()
         setBlogs(blogs.concat(response))
         notify(`New blog added: ${title}`, 1)
         setTitle("")
@@ -140,7 +143,7 @@ const App = () => {
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
-      <Togglable buttonLabel="New blog">
+      <Togglable buttonLabel="New blog" ref={noteFormRef}>
         <BlogForm
           handleSubmit={addBlog}
           title={title}
