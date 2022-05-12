@@ -18,10 +18,6 @@ const App = () => {
     nature: 0,
   })
 
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
-
   const noteFormRef = useRef()
 
   const notify = (message, nature = 0, duration = 5000) => {
@@ -81,25 +77,13 @@ const App = () => {
     notify("Logged out successfully", 1)
   }
 
-  const addBlog = (event) => {
-    event.preventDefault()
-    console.log("Adding new blog")
-
-    const blog = {
-      title,
-      author,
-      url,
-    }
-
+  const addBlog = (blogObject) => {
     blogService
-      .create(blog)
+      .create(blogObject)
       .then((response) => {
         noteFormRef.current.toggleVisibility()
         setBlogs(blogs.concat(response))
-        notify(`New blog added: ${title}`, 1)
-        setTitle("")
-        setAuthor("")
-        setUrl("")
+        notify(`New blog added: ${blogObject.title}`, 1)
       })
       .catch((e) => {
         console.error("Adding a new blog failed:", e)
@@ -144,15 +128,7 @@ const App = () => {
         <Blog key={blog.id} blog={blog} />
       ))}
       <Togglable buttonLabel="New blog" ref={noteFormRef}>
-        <BlogForm
-          handleSubmit={addBlog}
-          title={title}
-          author={author}
-          url={url}
-          handleTitleChange={({ target }) => setTitle(target.value)}
-          handleAuthorChange={({ target }) => setAuthor(target.value)}
-          handleUrlChange={({ target }) => setUrl(target.value)}
-        />
+        <BlogForm createBlog={addBlog} />
       </Togglable>
     </div>
   )
