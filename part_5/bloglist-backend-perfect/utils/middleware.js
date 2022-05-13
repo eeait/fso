@@ -21,10 +21,15 @@ const errorHandler = (error, request, response, next) => {
 const userExtractor = async (request, response, next) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    // console.log("MIDDLEWARE: found bearer")
     const decodedToken = jwt.verify(authorization.substring(7), process.env.SECRET)
     if (decodedToken) {
       request.user = await User.findById(decodedToken.id)
+      // console.log("\tdecodedToken", decodedToken)
+      // console.log("\trequest.user", request.user)
     }
+  } else {
+    // console.log("MIDDLEWARE: FAIL")
   }
 
   next()

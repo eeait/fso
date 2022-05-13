@@ -41,7 +41,7 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll()
-      .then((blogs) => setBlogs(blogs.sort(compareBlogs)))
+      .then((blogs) => setBlogs(blogs))
       .catch((e) => {
         notify("Couldn't fetch blogs from the server", -1)
         console.log("Coudn't fetch notes:", e)
@@ -93,7 +93,8 @@ const App = () => {
       .create(blogObject)
       .then((response) => {
         noteFormRef.current.toggleVisibility()
-        setBlogs(blogs.concat(response).sort(compareBlogs))
+        console.log("Add, response:", response)
+        setBlogs(blogs.concat(response))
         notify(`New blog added: ${blogObject.title}`, 1)
       })
       .catch((e) => {
@@ -105,9 +106,19 @@ const App = () => {
   const replaceBlogs = (updatedBlog) => {
     // console.log("Replacing with", updatedBlog)
     const updatedBlogs = blogs.map((b) =>
-      b.id === updatedBlog.id ? updatedBlog : b
+      b.id === updatedBlog.id ? { ...b, likes: b.likes + 1 } : b
     )
-    setBlogs(updatedBlogs.sort(compareBlogs))
+    setBlogs(updatedBlogs)
+  }
+
+  const removeBlog = (blogToBeRemoved) => {
+    const removeIndex = blogs
+      .map((b) => b.id)
+      .indexOf(blogToBeRemoved.id)
+    const copy = blogs.map(b => b)
+    // eslint-disable-next-line no-unused-expressions
+    removeIndex >= 0 && copy.splice(removeIndex, 1)
+    setBlogs(copy)
   }
 
   if (user === null) {
@@ -147,12 +158,14 @@ const App = () => {
         Log out
       </button>
       <h2>Blogs</h2>
-      {blogs.map((blog) => (
+      {blogs.sort(compareBlogs).map((blog) => (
         <Blog
           key={blog.id}
           blog={blog}
           notify={notify}
           replaceBlogs={replaceBlogs}
+          removeBlog={removeBlog}
+          user={user}
         />
       ))}
       <Togglable buttonLabel="New blog" ref={noteFormRef}>

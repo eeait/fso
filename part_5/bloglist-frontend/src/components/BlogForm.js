@@ -11,13 +11,13 @@ const BlogForm = ({ createBlog }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log("Adding new blog")
 
     const blog = {
       title,
       author,
       url,
     }
+    blog.likes = 0
     createBlog(blog)
     setTitle("")
     setAuthor("")

@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import "./blog.css"
 import blogService from "../services/blogs"
 
-const Blog = ({ blog, notify, replaceBlogs }) => {
+const Blog = ({ blog, notify, replaceBlogs, removeBlog, user }) => {
   const [expanded, setExpanded] = useState(false)
   const toggleExpanded = (event) => {
     event.preventDefault()
@@ -21,27 +21,62 @@ const Blog = ({ blog, notify, replaceBlogs }) => {
       })
   }
 
-  const buttonStyle = { marginLeft: "0.5em" }
+  const handleRemove = (event) => {
+    event.preventDefault()
+    // eslint-disable-next-line no-alert
+    const sure = window.confirm(`Deleting "${blog.title}".`)
+    if (sure) {
+      blogService.setToken(user.token)
+      blogService
+        .remove(blog)
+        .then((res) => {
+          console.log(res)
+          removeBlog(blog)
+        })
+        .catch((e) => {
+          notify("Couldn't remove blog", -1)
+          console.log(e)
+        })
+    }
+  }
+
+  const buttonStyleAfterText = { marginLeft: "0.5em" }
 
   const viewButton = () => (
     <button
       type="button"
       onClick={toggleExpanded}
-      style={buttonStyle}
+      style={buttonStyleAfterText}
     >
       {expanded ? "Hide" : "View"}
     </button>
-  ) 
+  )
+
+  const likeButton = () => (
+    <button
+      type="submit"
+      style={buttonStyleAfterText}
+      onClick={handleLike}
+    >
+      Like
+    </button>
+  )
+
+  const deleteButton = () => (
+    <button type="submit" onClick={handleRemove}>
+      Delete
+    </button>
+  )
+
   const details = () => (
     <div>
       {blog.url}
       <br />
-      {blog.likes} likes
-      <button type="button" style={buttonStyle} onClick={handleLike}>
-        Like
-      </button>
+      {blog.likes} likes{likeButton()}
       <br />
       Added by {blog.user.name}
+      <br />
+      {blog.user.username === user.username && deleteButton()}
     </div>
   )
 
