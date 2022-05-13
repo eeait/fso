@@ -28,10 +28,20 @@ const App = () => {
     }, duration)
   }
 
+  const compareBlogs = (b1, b2) => {
+    if (b1.likes > b2.likes) {
+      return -1
+    }
+    if (b1.likes < b2.likes) {
+      return 1
+    }
+    return 0
+  }
+
   useEffect(() => {
     blogService
       .getAll()
-      .then((blogs) => setBlogs(blogs))
+      .then((blogs) => setBlogs(blogs.sort(compareBlogs)))
       .catch((e) => {
         notify("Couldn't fetch blogs from the server", -1)
         console.log("Coudn't fetch notes:", e)
@@ -83,13 +93,21 @@ const App = () => {
       .create(blogObject)
       .then((response) => {
         noteFormRef.current.toggleVisibility()
-        setBlogs(blogs.concat(response))
+        setBlogs(blogs.concat(response).sort(compareBlogs))
         notify(`New blog added: ${blogObject.title}`, 1)
       })
       .catch((e) => {
         console.error("Adding a new blog failed:", e)
         notify("New blog couldn't be added", -1)
       })
+  }
+
+  const replaceBlogs = (updatedBlog) => {
+    // console.log("Replacing with", updatedBlog)
+    const updatedBlogs = blogs.map((b) =>
+      b.id === updatedBlog.id ? updatedBlog : b
+    )
+    setBlogs(updatedBlogs.sort(compareBlogs))
   }
 
   if (user === null) {
@@ -121,12 +139,21 @@ const App = () => {
         nature={notification.nature}
       />
       Logged in as {user.name}
-      <button type="submit" onClick={handleLogout}>
+      <button
+        type="submit"
+        onClick={handleLogout}
+        style={{ marginLeft: "0.5em" }}
+      >
         Log out
       </button>
       <h2>Blogs</h2>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          notify={notify}
+          replaceBlogs={replaceBlogs}
+        />
       ))}
       <Togglable buttonLabel="New blog" ref={noteFormRef}>
         <BlogForm createBlog={addBlog} />
