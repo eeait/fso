@@ -11,11 +11,12 @@ const loginRouter = require('./controllers/login')
 const { errorHandler, userExtractor } = require('./utils/middleware')
 const logger = require('./utils/logger')
 
-logger.info('connecting to', config.MONGODB_URI)
+logger.info("Running BLOGLIST-BACKEND-PERFECT")
+logger.info('Connecting to', config.MONGODB_URI)
 
 mongoose.connect(config.MONGODB_URI)
   .then(() => {
-    logger.info('connected to MongoDB')
+    logger.info('Connected to MongoDB')
   })
   .catch((error) => {
     logger.error('error connection to MongoDB:', error.message)
