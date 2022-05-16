@@ -3,7 +3,14 @@ import "./blog.css"
 import PropTypes from "prop-types"
 import blogService from "../services/blogs"
 
-const Blog = ({ blog, notify, replaceBlogs, removeBlog, user }) => {
+const Blog = ({
+  blog,
+  notify,
+  replaceBlogs,
+  removeBlog,
+  user,
+  uselessFunctionForTesting,
+}) => {
   const [expanded, setExpanded] = useState(false)
   const toggleExpanded = (event) => {
     event.preventDefault()
@@ -12,6 +19,7 @@ const Blog = ({ blog, notify, replaceBlogs, removeBlog, user }) => {
 
   const handleLike = (event) => {
     event.preventDefault()
+    uselessFunctionForTesting()
     blogService
       .like(blog)
       .then((response) => {

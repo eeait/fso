@@ -168,6 +168,9 @@ const App = () => {
           replaceBlogs={replaceBlogs}
           removeBlog={removeBlog}
           user={user}
+          uselessFunctionForTesting={() => {
+            console.log("UselessCalled")
+          }}
         />
       ))}
       <Togglable buttonLabel="New blog" ref={noteFormRef}>
