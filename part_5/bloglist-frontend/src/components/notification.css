@@ -8,9 +8,13 @@
 }
 
 .negative {
-    color: palevioletred;
+    background-color: rgb(255, 184, 207);
 }
 
 .positive {
-    color: lightseagreen;
+    background-color: rgb(52, 231, 171);
+}
+
+.neutral {
+    background-color: white;
 }

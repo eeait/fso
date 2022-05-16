@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import "./blog.css"
+import PropTypes from "prop-types"
 import blogService from "../services/blogs"
 
 const Blog = ({ blog, notify, replaceBlogs, removeBlog, user }) => {
@@ -34,7 +35,7 @@ const Blog = ({ blog, notify, replaceBlogs, removeBlog, user }) => {
           removeBlog(blog)
         })
         .catch((e) => {
-          notify("Couldn't remove blog", -1)
+          notify("Couldn't remove blog")
           console.log(e)
         })
     }
@@ -87,6 +88,14 @@ const Blog = ({ blog, notify, replaceBlogs, removeBlog, user }) => {
       {!expanded || details()}
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  notify: PropTypes.func.isRequired,
+  replaceBlogs: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 export default Blog

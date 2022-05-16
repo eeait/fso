@@ -1,6 +1,7 @@
 import { useState, useEffect, React, useRef } from "react"
 import Blog from "./components/Blog"
 import Notification from "./components/Notification"
+import TestNotifications from "./components/TestNotifications"
 import BlogForm from "./components/BlogForm"
 import LoginForm from "./components/LoginForm"
 import blogService from "./services/blogs"
@@ -115,7 +116,7 @@ const App = () => {
     const removeIndex = blogs
       .map((b) => b.id)
       .indexOf(blogToBeRemoved.id)
-    const copy = blogs.map(b => b)
+    const copy = blogs.map((b) => b)
     // eslint-disable-next-line no-unused-expressions
     removeIndex >= 0 && copy.splice(removeIndex, 1)
     setBlogs(copy)
@@ -161,6 +162,7 @@ const App = () => {
       {blogs.sort(compareBlogs).map((blog) => (
         <Blog
           key={blog.id}
+          // eslint-disable-next-line react/jsx-curly-brace-presence
           blog={blog}
           notify={notify}
           replaceBlogs={replaceBlogs}

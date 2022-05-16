@@ -23,5 +23,6 @@ module.exports = {
     "no-console": 0,
     "no-shadow": 0,
     "react/react-in-jsx-scope": 0,
+    "react/forbid-prop-types": 0,
   },
 }
