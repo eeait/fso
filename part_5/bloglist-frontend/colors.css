@@ -1,0 +1,20 @@
+/* Color Theme Swatches in Hex */
+.Lillhoplax-1-hex { color: #F569B2; }
+.Lillhoplax-2-hex { color: #8964C3; }
+.Lillhoplax-3-hex { color: #3CCAC3; }
+.Lillhoplax-4-hex { color: #FDD770; }
+.Lillhoplax-5-hex { color: #2D7EB9; }
+
+/* Color Theme Swatches in RGBA */
+.Lillhoplax-1-rgba { color: rgba(245, 105, 178, 1); }
+.Lillhoplax-2-rgba { color: rgba(137, 100, 195, 1); }
+.Lillhoplax-3-rgba { color: rgba(60, 202, 195, 1); }
+.Lillhoplax-4-rgba { color: rgba(253, 215, 112, 1); }
+.Lillhoplax-5-rgba { color: rgba(45, 126, 185, 1); }
+
+/* Color Theme Swatches in HSLA */
+.Lillhoplax-1-hsla { color: hsla(328, 87, 68, 1); }
+.Lillhoplax-2-hsla { color: hsla(263, 44, 57, 1); }
+.Lillhoplax-3-hsla { color: hsla(177, 57, 51, 1); }
+.Lillhoplax-4-hsla { color: hsla(43, 97, 71, 1); }
+.Lillhoplax-5-hsla { color: hsla(205, 60, 45, 1); }

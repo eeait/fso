@@ -152,6 +152,7 @@ const App = () => {
       />
       Logged in as {user.name}
       <button
+        id="log-out-button"
         type="submit"
         onClick={handleLogout}
         style={{ marginLeft: "0.5em" }}

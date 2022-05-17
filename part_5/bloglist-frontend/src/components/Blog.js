@@ -53,6 +53,7 @@ const Blog = ({
 
   const viewButton = () => (
     <button
+      id="view-blog-button"
       type="button"
       onClick={toggleExpanded}
       style={buttonStyleAfterText}
@@ -63,6 +64,7 @@ const Blog = ({
 
   const likeButton = () => (
     <button
+      id="like-button"
       type="submit"
       style={buttonStyleAfterText}
       onClick={handleLike}
@@ -72,7 +74,11 @@ const Blog = ({
   )
 
   const deleteButton = () => (
-    <button type="submit" onClick={handleRemove}>
+    <button
+      id="delete-blog-button"
+      type="submit"
+      onClick={handleRemove}
+    >
       Delete
     </button>
   )
