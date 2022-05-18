@@ -22,8 +22,8 @@ const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
-  console.log("State now: ", state)
-  console.log("Action", action)
+  // console.log("State now: ", state)
+  // console.log("Action", action)
 
   switch (action.type) {
     case "VOTE":
