@@ -23,3 +23,4 @@ yarn-debug.log*
 yarn-error.log*
 
 notes_to_self.txt
+db.json
