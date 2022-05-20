@@ -1,7 +1,6 @@
 import { connect } from "react-redux"
 
-const Notification = (props) => {
-  const notification = props.notification
+const Notification = ({ notification }) => {
   const style = {
     border: "solid",
     padding: "0.5em",
@@ -16,7 +15,7 @@ const Notification = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    notification: state.notification,
+    notification: state.notification.notification,
   }
 }
 
