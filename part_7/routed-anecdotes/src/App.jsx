@@ -1,7 +1,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/react-in-jsx-scope */
+
 import { useState } from "react"
+import "./app.css"
+import { Routes, Route, Link } from "react-router-dom"
 
 const Menu = () => {
   const padding = {
@@ -9,7 +12,7 @@ const Menu = () => {
   }
   return (
     <div>
-      <a href="#" style={padding}>
+      {/* <a href="#" style={padding}>
         Anecdotes
       </a>
       <a href="#" style={padding}>
@@ -17,7 +20,16 @@ const Menu = () => {
       </a>
       <a href="#" style={padding}>
         About
-      </a>
+      </a> */}
+      <Link style={padding} to="/">
+        Anecdotes
+      </Link>
+      <Link style={padding} to="/create">
+        Create new
+      </Link>
+      <Link style={padding} to="/about">
+        About
+      </Link>
     </div>
   )
 }
@@ -38,28 +50,26 @@ const About = () => (
     <p>According to Wikipedia:</p>
 
     <em>
-      An anecdote is a brief, revealing account of an individual
-      person or an incident. Occasionally humorous, anecdotes differ
-      from jokes because their primary purpose is not simply to
-      provoke laughter but to reveal a truth more general than the
-      brief tale itself, such as to characterize a person by
-      delineating a specific quirk or trait, to communicate an
-      abstract idea about a person, place, or thing through the
-      concrete details of a short narrative. An anecdote is &quot; a
-      story with a point.&quot;
+      An anecdote is a brief, revealing account of an individual person or an
+      incident. Occasionally humorous, anecdotes differ from jokes because their
+      primary purpose is not simply to provoke laughter but to reveal a truth
+      more general than the brief tale itself, such as to characterize a person
+      by delineating a specific quirk or trait, to communicate an abstract idea
+      about a person, place, or thing through the concrete details of a short
+      narrative. An anecdote is &quot; a story with a point.&quot;
     </em>
 
     <p>
-      Software engineering is full of excellent anecdotes, and with
-      this app you can find the best ones and add your own.
+      Software engineering is full of excellent anecdotes, and with this app you
+      can find the best ones and add your own.
     </p>
   </div>
 )
 
 const Footer = () => (
   <div>
-    Anecdote app for{" "}
-    <a href="https://fullstackopen.com/">Full Stack Open</a>. See{" "}
+    Anecdote app for <a href="https://fullstackopen.com/">Full Stack Open</a>.
+    See{" "}
     <a href="https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js">
       https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js
     </a>{" "}
@@ -155,12 +165,14 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="app">
       <h1>Software anecdotes</h1>
       <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
+      <Routes>
+        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path="/create" element={<CreateNew addNew={addNew} />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
       <Footer />
     </div>
   )
