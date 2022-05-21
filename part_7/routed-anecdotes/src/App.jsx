@@ -1,3 +1,5 @@
+/* eslint-disable react/button-has-type */
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/react-in-jsx-scope */
@@ -5,6 +7,7 @@
 import { useState } from "react"
 import "./app.css"
 import { Routes, Route, Link, useMatch, useNavigate } from "react-router-dom"
+import useField from "./hooks"
 
 const Menu = () => {
   const padding = {
@@ -12,15 +15,6 @@ const Menu = () => {
   }
   return (
     <div>
-      {/* <a href="#" style={padding}>
-        Anecdotes
-      </a>
-      <a href="#" style={padding}>
-        Create new
-      </a>
-      <a href="#" style={padding}>
-        About
-      </a> */}
       <Link style={padding} to="/">
         Anecdotes
       </Link>
@@ -105,22 +99,28 @@ const Footer = () => (
 )
 
 const CreateNew = ({ addNew, notify }) => {
-  const [content, setContent] = useState("")
-  const [author, setAuthor] = useState("")
-  const [info, setInfo] = useState("")
   const navigate = useNavigate()
+  const content = useField("text")
+  const author = useField("text")
+  const info = useField("text")
 
   const handleSubmit = (e) => {
     e.preventDefault()
     addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     })
-    console.log("FFf")
     navigate("/")
-    notify(`New anecdote created: ${content}`)
+    notify(`New anecdote created: ${content.value}`)
+  }
+
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -129,29 +129,20 @@ const CreateNew = ({ addNew, notify }) => {
       <form onSubmit={handleSubmit}>
         <div>
           Content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input {...content.noReset} />
         </div>
         <div>
           Author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input {...author.noReset} />
         </div>
         <div>
           URL for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input {...info.noReset} />
         </div>
         <button type="submit">Create</button>
+        <button type="reset" onClick={handleReset}>
+          Reset
+        </button>
       </form>
     </div>
   )

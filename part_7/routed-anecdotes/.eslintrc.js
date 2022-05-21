@@ -3,7 +3,13 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ["plugin:react/recommended", "airbnb", "prettier"],
+  extends: [
+    "plugin:react/recommended",
+    "react-app",
+    "react-app/jest",
+    "airbnb",
+    "prettier",
+  ],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -20,6 +26,6 @@ module.exports = {
     ],
     "jsx-a11y/anchor-is-valid": 0,
     "no-console": 0,
-    "no-param-reassign": ["error", { "props": false }]
+    "no-param-reassign": ["error", { props: false }],
   },
 }
