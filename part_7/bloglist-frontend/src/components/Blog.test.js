@@ -83,7 +83,6 @@ describe("<Note /> without beforeAll", () => {
     const expandButton = screen.getByText("View")
     await user.click(expandButton)
 
-
     // Like
     const likeButton = screen.getByText("Like")
     await user.click(likeButton)

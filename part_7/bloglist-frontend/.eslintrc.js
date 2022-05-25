@@ -4,10 +4,12 @@ module.exports = {
     es2021: true,
   },
   extends: [
+    "airbnb",
     "react-app",
     "react-app/jest",
     "plugin:react/recommended",
-    "airbnb",
+    "plugin:react-hooks/recommended",
+    "plugin:react-redux/recommended",
     "prettier",
   ],
   parserOptions: {

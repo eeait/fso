@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 import "./blog.css"
 import PropTypes from "prop-types"
+import { useDispatch } from "react-redux"
 import blogService from "../services/blogs"
+import { notify } from "../reducers/notificationReducer"
 
 const Blog = ({
   blog,
-  notify,
   replaceBlogs,
   removeBlog,
   user,
@@ -17,6 +18,8 @@ const Blog = ({
     setExpanded(!expanded)
   }
 
+  const dispatch = useDispatch()
+
   const handleLike = (event) => {
     event.preventDefault()
     uselessFunctionForTesting()
@@ -26,7 +29,7 @@ const Blog = ({
         replaceBlogs(response)
       })
       .catch((e) => {
-        notify("Couldn't like blog", -1)
+        dispatch(notify("Couldn't like blog", -1))
       })
   }
 
@@ -43,7 +46,7 @@ const Blog = ({
           removeBlog(blog)
         })
         .catch((e) => {
-          notify("Couldn't remove blog")
+          dispatch(notify("Couldn't remove blog", -1))
           console.log(e)
         })
     }
@@ -106,7 +109,6 @@ const Blog = ({
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  notify: PropTypes.func.isRequired,
   replaceBlogs: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,

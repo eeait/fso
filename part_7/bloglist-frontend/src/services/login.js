@@ -7,4 +7,6 @@ const login = async (creds) => {
   return response.data
 }
 
-export default { login }
+const methods = { login }
+
+export default methods

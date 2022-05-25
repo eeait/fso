@@ -3,10 +3,10 @@ import axios from "axios"
 const baseUrl = "/api/blogs"
 
 let token = null
-console.log("RESET TOKEN")
+// console.log("RESET TOKEN")
 
 const setToken = (newToken) => {
-  console.log("UPDATE TOKEN")
+  // console.log("UPDATE TOKEN")
   token = `bearer ${newToken}`
 }
 
@@ -24,7 +24,6 @@ const create = async (newBlogObject) => {
 }
 
 const like = async (blogObject) => {
-
   const updatedBlog = {
     ...blogObject,
     likes: blogObject.likes + 1,
@@ -49,4 +48,6 @@ const remove = async (blogObject) => {
   return response.data
 }
 
-export default { getAll, create, like, remove, setToken }
+const methods = { getAll, create, like, remove, setToken }
+
+export default methods

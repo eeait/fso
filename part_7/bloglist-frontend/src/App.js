@@ -1,4 +1,5 @@
 import { useState, useEffect, React, useRef } from "react"
+import { useDispatch } from "react-redux"
 import Blog from "./components/Blog"
 import Notification from "./components/Notification"
 import TestNotifications from "./components/TestNotifications"
@@ -8,6 +9,7 @@ import blogService from "./services/blogs"
 import loginService from "./services/login"
 import Togglable from "./components/Togglable"
 import "./app.css"
+import { notify } from "./reducers/notificationReducer"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,19 +17,9 @@ const App = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({
-    message: "",
-    nature: 0,
-  })
 
   const noteFormRef = useRef()
-
-  const notify = (message, nature = 0, duration = 5000) => {
-    setNotification({ message, nature })
-    setTimeout(() => {
-      setNotification({ message: "", nature: 0 })
-    }, duration)
-  }
+  const dispatch = useDispatch()
 
   const compareBlogs = (b1, b2) => {
     if (b1.likes > b2.likes) {
@@ -44,10 +36,10 @@ const App = () => {
       .getAll()
       .then((blogs) => setBlogs(blogs))
       .catch((e) => {
-        notify("Couldn't fetch blogs from the server", -1)
+        dispatch(notify("Couldn't fetch blogs from the server", -1))
         console.log("Coudn't fetch notes:", e)
       })
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedUser")
@@ -76,7 +68,7 @@ const App = () => {
       console.log("\tSuccess")
     } catch (e) {
       console.log("Wrong credentials")
-      notify("Wrong username or password", -1)
+      dispatch(notify("Wrong username or password", -1))
     }
   }
 
@@ -86,7 +78,7 @@ const App = () => {
     setUser(null)
     window.localStorage.removeItem("loggedUser")
     console.log("\tSuccess")
-    notify("Logged out successfully", 1)
+    dispatch(notify("Logged out successfully", 1))
   }
 
   const addBlog = (blogObject) => {
@@ -96,11 +88,11 @@ const App = () => {
         noteFormRef.current.toggleVisibility()
         console.log("Add, response:", response)
         setBlogs(blogs.concat(response))
-        notify(`New blog added: ${blogObject.title}`, 1)
+        dispatch(notify(`New blog added: ${blogObject.title}`, 1))
       })
       .catch((e) => {
         console.error("Adding a new blog failed:", e)
-        notify("New blog couldn't be added", -1)
+        dispatch(notify("New blog couldn't be added", -1))
       })
   }
 
@@ -125,10 +117,7 @@ const App = () => {
   if (user === null) {
     return (
       <div className="app">
-        <Notification
-          message={notification.message}
-          nature={notification.nature}
-        />
+        <Notification />
         <LoginForm
           handleSubmit={handleLogin}
           username={username}
@@ -146,10 +135,7 @@ const App = () => {
 
   return (
     <div className="app">
-      <Notification
-        message={notification.message}
-        nature={notification.nature}
-      />
+      <Notification />
       Logged in as {user.name}
       <button
         id="log-out-button"
@@ -164,12 +150,11 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
-          notify={notify}
           replaceBlogs={replaceBlogs}
           removeBlog={removeBlog}
           user={user}
           uselessFunctionForTesting={() => {
-            console.log("UselessCalled")
+            // console.log("UselessCalled")
           }}
         />
       ))}

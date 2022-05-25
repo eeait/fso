@@ -1,10 +1,17 @@
 import "./notification.css"
-import PropTypes from "prop-types"
+import { useSelector } from "react-redux"
 
-const Notification = ({ message, nature }) => {
+const Notification = () => {
+  const select = useSelector
+  const [message, nature] = select(({ notification }) => [
+    notification.message,
+    notification.nature,
+  ])
+
   if (message === "") {
     return null
   }
+
   const style = {
     "-1": "negative",
     0: "neutral",
@@ -16,11 +23,6 @@ const Notification = ({ message, nature }) => {
       {message}
     </div>
   )
-}
-
-Notification.propTypes = {
-  message: PropTypes.string.isRequired,
-  nature: PropTypes.number.isRequired,
 }
 
 export default Notification
