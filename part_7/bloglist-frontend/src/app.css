@@ -6,3 +6,7 @@
     border-color:black;
     border-radius: 0.5em;
 }
+
+td {
+    padding-right: 0.5em;
+}

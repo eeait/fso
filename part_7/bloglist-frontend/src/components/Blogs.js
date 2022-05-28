@@ -1,7 +1,11 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import "./blog.css"
 import { useDispatch, useSelector } from "react-redux"
-import { deleteBlog, voteBlog } from "../reducers/blogReducer"
+import {
+  deleteBlog,
+  initBlogs,
+  voteBlog,
+} from "../reducers/blogReducer"
 import Togglable from "./Togglable"
 import BlogForm from "./BlogForm"
 
@@ -88,6 +92,11 @@ const Blog = ({ blog }) => {
 const Blogs = () => {
   const select = useSelector
   const blogs = select((state) => state.blogs)
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(initBlogs())
+  }, [dispatch])
 
   return (
     <div>
