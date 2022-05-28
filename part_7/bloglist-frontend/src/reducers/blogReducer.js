@@ -28,10 +28,16 @@ export const initBlogs = () => async (dispatch) => {
   dispatch(setBlogs(blogs))
 }
 
-export const createBlog = (blog) => async (dispatch) => {
-  const newBlog = await blogService.create(blog)
-  dispatch(appendBlog(newBlog))
-  dispatch(notify(`New blog added: ${blog.title}`, 1))
+export const createBlog = (blog) => (dispatch) => {
+  blogService
+    .create(blog)
+    .then((response) => {
+      dispatch(appendBlog(response))
+      dispatch(notify(`New blog added: ${blog.title}`, 1))
+    })
+    .catch((e) => {
+      dispatch(notify(`Error adding a blog`, -1))
+    })
 }
 
 export const deleteBlog = (blog) => (dispatch) => {

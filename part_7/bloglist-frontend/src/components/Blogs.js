@@ -3,7 +3,7 @@ import "./blog.css"
 import { useDispatch, useSelector } from "react-redux"
 import { deleteBlog, voteBlog } from "../reducers/blogReducer"
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog }) => {
   const [expanded, setExpanded] = useState(false)
   const toggleExpanded = (event) => {
     event.preventDefault()
@@ -11,6 +11,9 @@ const Blog = ({ blog, user }) => {
   }
 
   const dispatch = useDispatch()
+  const select = useSelector
+
+  const user = select((state) => state.login)
 
   const handleLike = (event) => {
     event.preventDefault()
@@ -80,16 +83,17 @@ const Blog = ({ blog, user }) => {
   )
 }
 
-const Blogs = ({ user }) => {
+const Blogs = () => {
   const select = useSelector
   const blogs = select((state) => state.blogs)
 
   return (
     <div>
+      <h2>Blogs</h2>
       {[...blogs]
         .sort((b1, b2) => b2.likes - b1.likes)
         .map((blog) => (
-          <Blog key={blog.id} blog={blog} user={user} />
+          <Blog key={blog.id} blog={blog} />
         ))}
     </div>
   )
