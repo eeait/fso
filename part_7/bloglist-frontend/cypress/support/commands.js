@@ -55,7 +55,7 @@ Cypress.Commands.add("createBlog", (n) => {
       author: "Just A Lamp",
       url: "duck.com",
       likes: 1,
-      user: { name: "Berlin Tegel"}
+      user: { name: "Berlin Tegel" },
     },
   ]
   cy.request({
@@ -67,7 +67,7 @@ Cypress.Commands.add("createBlog", (n) => {
         JSON.parse(localStorage.getItem("loggedUser")).token
       }`,
     },
+  }).then((r) => {
+    cy.visit("http://localhost:3000")
   })
-
-  cy.visit("http://localhost:3000")
 })

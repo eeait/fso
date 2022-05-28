@@ -10,6 +10,7 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:react-redux/recommended",
+    "plugin:cypress/recommended",
     "prettier",
   ],
   parserOptions: {

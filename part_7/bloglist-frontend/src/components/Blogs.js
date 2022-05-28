@@ -1,17 +1,10 @@
 import React, { useState } from "react"
 import "./blog.css"
-import PropTypes from "prop-types"
-import { useDispatch } from "react-redux"
-import blogService from "../services/blogs"
+import { useDispatch, useSelector } from "react-redux"
 import { notify } from "../reducers/notificationReducer"
+import { deleteBlog, voteBlog } from "../reducers/blogReducer"
 
-const Blog = ({
-  blog,
-  replaceBlogs,
-  removeBlog,
-  user,
-  uselessFunctionForTesting,
-}) => {
+const Blog = ({ blog, replaceBlogs, removeBlog, user }) => {
   const [expanded, setExpanded] = useState(false)
   const toggleExpanded = (event) => {
     event.preventDefault()
@@ -22,33 +15,14 @@ const Blog = ({
 
   const handleLike = (event) => {
     event.preventDefault()
-    uselessFunctionForTesting()
-    blogService
-      .like(blog)
-      .then((response) => {
-        replaceBlogs(response)
-      })
-      .catch((e) => {
-        dispatch(notify("Couldn't like blog", -1))
-      })
+    dispatch(voteBlog(blog))
   }
 
   const handleRemove = (event) => {
     event.preventDefault()
     // eslint-disable-next-line no-alert
-    const sure = window.confirm(`Deleting "${blog.title}".`)
-    if (sure) {
-      blogService.setToken(user.token)
-      blogService
-        .remove(blog)
-        .then((res) => {
-          console.log(res)
-          removeBlog(blog)
-        })
-        .catch((e) => {
-          dispatch(notify("Couldn't remove blog", -1))
-          console.log(e)
-        })
+    if (window.confirm(`Deleting "${blog.title}".`)) {
+      dispatch(deleteBlog(blog))
     }
   }
 
@@ -107,11 +81,19 @@ const Blog = ({
   )
 }
 
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  replaceBlogs: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+const Blogs = ({ user }) => {
+  const select = useSelector
+  const blogs = select((state) => state.blogs)
+
+  return (
+    <div>
+      {[...blogs]
+        .sort((b1, b2) => b2.likes - b1.likes)
+        .map((blog) => (
+          <Blog key={blog.id} blog={blog} user={user} />
+        ))}
+    </div>
+  )
 }
 
-export default Blog
+export default Blogs

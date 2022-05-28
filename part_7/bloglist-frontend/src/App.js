@@ -1,8 +1,7 @@
 import { useState, useEffect, React, useRef } from "react"
-import { useDispatch } from "react-redux"
-import Blog from "./components/Blog"
+import { useDispatch, useSelector } from "react-redux"
+import Blogs from "./components/Blogs"
 import Notification from "./components/Notification"
-import TestNotifications from "./components/TestNotifications"
 import BlogForm from "./components/BlogForm"
 import LoginForm from "./components/LoginForm"
 import blogService from "./services/blogs"
@@ -10,35 +9,18 @@ import loginService from "./services/login"
 import Togglable from "./components/Togglable"
 import "./app.css"
 import { notify } from "./reducers/notificationReducer"
+import { createBlog, initBlogs } from "./reducers/blogReducer"
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
 
-  const noteFormRef = useRef()
+  const blogFormRef = useRef()
   const dispatch = useDispatch()
 
-  const compareBlogs = (b1, b2) => {
-    if (b1.likes > b2.likes) {
-      return -1
-    }
-    if (b1.likes < b2.likes) {
-      return 1
-    }
-    return 0
-  }
-
   useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs))
-      .catch((e) => {
-        dispatch(notify("Couldn't fetch blogs from the server", -1))
-        console.log("Coudn't fetch notes:", e)
-      })
+    dispatch(initBlogs())
   }, [dispatch])
 
   useEffect(() => {
@@ -82,36 +64,8 @@ const App = () => {
   }
 
   const addBlog = (blogObject) => {
-    blogService
-      .create(blogObject)
-      .then((response) => {
-        noteFormRef.current.toggleVisibility()
-        console.log("Add, response:", response)
-        setBlogs(blogs.concat(response))
-        dispatch(notify(`New blog added: ${blogObject.title}`, 1))
-      })
-      .catch((e) => {
-        console.error("Adding a new blog failed:", e)
-        dispatch(notify("New blog couldn't be added", -1))
-      })
-  }
-
-  const replaceBlogs = (updatedBlog) => {
-    // console.log("Replacing with", updatedBlog)
-    const updatedBlogs = blogs.map((b) =>
-      b.id === updatedBlog.id ? { ...b, likes: b.likes + 1 } : b
-    )
-    setBlogs(updatedBlogs)
-  }
-
-  const removeBlog = (blogToBeRemoved) => {
-    const removeIndex = blogs
-      .map((b) => b.id)
-      .indexOf(blogToBeRemoved.id)
-    const copy = blogs.map((b) => b)
-    // eslint-disable-next-line no-unused-expressions
-    removeIndex >= 0 && copy.splice(removeIndex, 1)
-    setBlogs(copy)
+    dispatch(createBlog(blogObject))
+    blogFormRef.current.toggleVisibility()
   }
 
   if (user === null) {
@@ -146,19 +100,8 @@ const App = () => {
         Log out
       </button>
       <h2>Blogs</h2>
-      {blogs.sort(compareBlogs).map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          replaceBlogs={replaceBlogs}
-          removeBlog={removeBlog}
-          user={user}
-          uselessFunctionForTesting={() => {
-            // console.log("UselessCalled")
-          }}
-        />
-      ))}
-      <Togglable buttonLabel="New blog" ref={noteFormRef}>
+      <Blogs user={user} addBlog={addBlog} />
+      <Togglable buttonLabel="New blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
     </div>

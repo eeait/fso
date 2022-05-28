@@ -1,3 +1,4 @@
+from cgitb import reset
 import requests
 import json
 
@@ -52,30 +53,30 @@ blogs = [
     },
 ]
 
-drop = requests.post("http://localhost:3001/api/drop")
+reset = requests.post("http://localhost:3003/api/testing/reset")
 print("Database emptied")
 
 u0 = requests.post(
-    "http://localhost:3001/api/users",
+    "http://localhost:3003/api/users",
     data=json.dumps(users[0]),
     headers={"Content-Type": "application/json"},
 )
 u1 = requests.post(
-    "http://localhost:3001/api/users",
+    "http://localhost:3003/api/users",
     data=json.dumps(users[1]),
     headers={"Content-Type": "application/json"},
 )
 print("Users added")
 
 l0 = requests.post(
-    "http://localhost:3001/api/login",
+    "http://localhost:3003/api/login",
     data=json.dumps({
         "username": users[0]["username"],
         "password": users[0]["password"]
     }),
     headers={"Content-Type": "application/json"},)
 l1 = requests.post(
-    "http://localhost:3001/api/login",
+    "http://localhost:3003/api/login",
     data=json.dumps({
         "username": users[1]["username"],
         "password": users[1]["password"]
@@ -87,7 +88,7 @@ t0 = str(json.loads(l0.text)["token"])
 t1 = str(json.loads(l1.text)["token"])
 
 b0 = requests.post(
-    "http://localhost:3001/api/blogs",
+    "http://localhost:3003/api/blogs",
     data=json.dumps(blogs[0]),
     headers={
         "Content-Type": "application/json",
@@ -95,7 +96,7 @@ b0 = requests.post(
     },
 )
 b1 = requests.post(
-    "http://localhost:3001/api/blogs",
+    "http://localhost:3003/api/blogs",
     data=json.dumps(blogs[1]),
     headers={
         "Content-Type": "application/json",
@@ -103,7 +104,7 @@ b1 = requests.post(
     },
 )
 b2 = requests.post(
-    "http://localhost:3001/api/blogs",
+    "http://localhost:3003/api/blogs",
     data=json.dumps(blogs[2]),
     headers={
         "Content-Type": "application/json",
@@ -111,7 +112,7 @@ b2 = requests.post(
     },
 )
 b3 = requests.post(
-    "http://localhost:3001/api/blogs",
+    "http://localhost:3003/api/blogs",
     data=json.dumps(blogs[3]),
     headers={
         "Content-Type": "application/json",
@@ -119,7 +120,7 @@ b3 = requests.post(
     },
 )
 b4 = requests.post(
-    "http://localhost:3001/api/blogs",
+    "http://localhost:3003/api/blogs",
     data=json.dumps(blogs[4]),
     headers={
         "Content-Type": "application/json",
@@ -127,7 +128,7 @@ b4 = requests.post(
     },
 )
 b5 = requests.post(
-    "http://localhost:3001/api/blogs",
+    "http://localhost:3003/api/blogs",
     data=json.dumps(blogs[5]),
     headers={
         "Content-Type": "application/json",

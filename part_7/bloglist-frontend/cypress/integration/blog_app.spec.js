@@ -1,9 +1,10 @@
+/* eslint-disable testing-library/await-async-utils */
+/* eslint-disable cypress/no-unnecessary-waiting */
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
 
 describe("Blog app", function () {
   beforeEach(function () {
-    cy.request("POST", "http://localhost:3003/api/testing/reset")
     const user0 = {
       name: "Berlin Tegel",
       username: "germany",
@@ -14,9 +15,19 @@ describe("Blog app", function () {
       username: "united_kingdom",
       password: "Airport",
     }
-    cy.request("POST", "http://localhost:3003/api/users", user0)
-    cy.request("POST", "http://localhost:3003/api/users", user1)
-    cy.visit("http://localhost:3000")
+
+    cy.wait(400)
+    cy.request("POST", "http://localhost:3003/api/testing/reset")
+      .then((r) => {
+        cy.request("POST", "http://localhost:3003/api/users", user0)
+      })
+      .then((r) => {
+        cy.request("POST", "http://localhost:3003/api/users", user1)
+      })
+      .then((r) => {
+        cy.log("RESET OK")
+        cy.visit("http://localhost:3000")
+      })
   })
 
   it("Login form is shown", function () {
@@ -58,7 +69,9 @@ describe("Blog app", function () {
 
     describe("and there is a blog,", function () {
       beforeEach(function () {
+        cy.log("TRYING TO CREATE")
         cy.createBlog(0)
+        cy.log("CREATED")
       })
 
       it("the blog is visible.", function () {
@@ -80,7 +93,7 @@ describe("Blog app", function () {
       it("adder can delete the blog.", function () {
         cy.get("#view-blog-button").contains("View").click()
         cy.get("#delete-blog-button").click()
-        cy.should("not.contain", "No it doesn't")
+        cy.root().should("not.contain", "Writing")
       })
 
       it("non-adder does not have a delete button.", function () {
