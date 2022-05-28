@@ -25,7 +25,6 @@ describe("Blog app", function () {
         cy.request("POST", "http://localhost:3003/api/users", user1)
       })
       .then((r) => {
-        cy.log("RESET OK")
         cy.visit("http://localhost:3000")
       })
   })
@@ -48,7 +47,7 @@ describe("Blog app", function () {
       cy.get("#password").type("wrong")
       cy.get("#login-button").click()
       cy.get(".notification")
-        .should("contain", "Wrong username or password")
+        .should("contain", "failed")
         .should("have.css", "background-color", "rgb(255, 184, 207)")
     })
   })
@@ -69,9 +68,7 @@ describe("Blog app", function () {
 
     describe("and there is a blog,", function () {
       beforeEach(function () {
-        cy.log("TRYING TO CREATE")
         cy.createBlog(0)
-        cy.log("CREATED")
       })
 
       it("the blog is visible.", function () {

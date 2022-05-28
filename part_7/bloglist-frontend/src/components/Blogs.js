@@ -1,10 +1,9 @@
 import React, { useState } from "react"
 import "./blog.css"
 import { useDispatch, useSelector } from "react-redux"
-import { notify } from "../reducers/notificationReducer"
 import { deleteBlog, voteBlog } from "../reducers/blogReducer"
 
-const Blog = ({ blog, replaceBlogs, removeBlog, user }) => {
+const Blog = ({ blog, user }) => {
   const [expanded, setExpanded] = useState(false)
   const toggleExpanded = (event) => {
     event.preventDefault()
