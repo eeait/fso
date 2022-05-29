@@ -71,6 +71,7 @@ const LoginForm = () => {
       >
         Log out
       </button>
+      <p />
     </div>
   )
 }
