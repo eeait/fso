@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import "./blog.css"
 import { useDispatch, useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 import {
   deleteBlog,
   initBlogs,
@@ -82,7 +83,8 @@ const Blog = ({ blog }) => {
 
   return (
     <div className="blog">
-      <a href={blog.url}>{blog.title}</a> by {blog.author}
+      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link> by{" "}
+      {blog.author}
       {viewButton()}
       {!expanded || details()}
     </div>
