@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { voteBlog } from "../reducers/blogReducer"
+import CommentSection from "./CommentSection"
 
 const MainBlog = () => {
   const { id } = useParams()
@@ -35,6 +36,7 @@ const MainBlog = () => {
       {blog.likes} likes {likeButton()}
       <br />
       Added by {blog.user.name}
+      <CommentSection blog={blog} />
     </div>
   )
 }

@@ -48,6 +48,15 @@ const remove = async (blogObject) => {
   return response.data
 }
 
-const methods = { getAll, create, like, remove, setToken }
+const comment = async (blog, comment) => {
+  console.log(comment)
+  const response = await axios.post(
+    `${baseUrl}/${blog.id}/comments`,
+    comment
+  )
+  return response.data
+}
+
+const methods = { getAll, create, like, remove, comment, setToken }
 
 export default methods

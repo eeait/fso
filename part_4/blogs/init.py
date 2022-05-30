@@ -19,37 +19,43 @@ blogs = [
     "title": "Oh. My. God.",
     "author": "Janice",
     "url": "https://soannoying.com/",
-    "likes": 0
+    "likes": 0,
+    "comments": []
     },
     {
     "title": "How to say 'I know!'",
     "author": "Monica Geller",
     "url": "http://www.cleaners.com",
-    "likes": 5
+    "likes": 5,
+    "comments": [] 
     },
     {
     "title": "We were on a break",
     "author": "Ross and Rachel",
     "url": "http://www.runninggags.com",
-    "likes": 236
+    "likes": 236,
+    "comments": ["C1", "C2"] 
     },
     {
     "title": "Sluts'r'us",
     "author": "Phoebe",
     "url": "http://www.goofiness.com",
-    "likes": 5
+    "likes": 5,
+    "comments": []
     },
     {
     "title": "How to Brew Coffee",
     "author": "Gunther",
     "url": "https://www.centralperk.com",
-    "likes": 124
+    "likes": 124,
+    "comments": [] 
     },
     {
     "title": "How u doin'?",
     "author": "Joey",
     "url": "https://www.tinder.com",
-    "likes": 69
+    "likes": 69,
+    "comments": [] 
     },
 ]
 

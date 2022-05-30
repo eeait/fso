@@ -20,6 +20,13 @@ const blogSlice = createSlice({
         b.id === action.payload.id ? { ...b, likes: b.likes + 1 } : b
       )
     },
+    addComment(state, action) {
+      return state.map((b) =>
+        b.id === action.payload.id
+          ? { ...b, comments: action.payload.comments }
+          : b
+      )
+    },
   },
 })
 
@@ -41,14 +48,12 @@ export const createBlog = (blog) => (dispatch) => {
 }
 
 export const deleteBlog = (blog) => (dispatch) => {
-  console.log(blog)
   blogService.remove(blog).then((r) => {
     dispatch(removeBlog(blog))
   })
 }
 
 export const voteBlog = (blog) => (dispatch) => {
-  console.log("LIKE", blog)
   blogService
     .like(blog)
     .then((likedBlog) => {
@@ -59,7 +64,23 @@ export const voteBlog = (blog) => (dispatch) => {
     })
 }
 
-export const { setBlogs, appendBlog, removeBlog, likeBlog } =
-  blogSlice.actions
+export const commentBlog = (blog, comment) => (dispatch) => {
+  blogService
+    .comment(blog, { comment })
+    .then((commentedBlog) => {
+      dispatch(addComment(commentedBlog))
+    })
+    .catch((e) => {
+      dispatch(notify("Couldn't add comment", -1))
+    })
+}
+
+export const {
+  setBlogs,
+  appendBlog,
+  removeBlog,
+  likeBlog,
+  addComment,
+} = blogSlice.actions
 
 export default blogSlice.reducer
