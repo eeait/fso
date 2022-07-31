@@ -1,9 +1,18 @@
+import { useQuery } from "@apollo/client";
+import { ALL_BOOKS } from "../queries.js";
+
 const Books = (props) => {
   if (!props.show) {
     return null
   }
 
-  const books = []
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const result = useQuery(ALL_BOOKS)
+  if (result.loading) {
+    return <div>loading...</div>
+  }
+
+  const allBooks = result.data.allBooks
 
   return (
     <div>
@@ -16,7 +25,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books.map((a) => (
+          {allBooks.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author}</td>
