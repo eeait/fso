@@ -1,18 +1,41 @@
-import { useQuery } from "@apollo/client";
-import { ALL_AUTHORS } from "../queries.js";
+import { useMutation, useQuery } from "@apollo/client";
+import { useState } from "react";
+import { ALL_AUTHORS, EDIT_AUTHOR } from "../queries.js";
 
 const Authors = (props) => {
+  const [name, setName] = useState("");
+  const [born, setBorn] = useState("");
+
+  const result = useQuery(ALL_AUTHORS);
+  const [editAuthor] = useMutation(EDIT_AUTHOR);
+
   if (!props.show) {
     return null;
   }
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const result = useQuery(ALL_AUTHORS);
-  console.log(result);
+
   if (result.loading) {
     return <div>loading...</div>;
   }
 
   const allAuthors = result.data.allAuthors;
+
+  const submit = async (event) => {
+    event.preventDefault();
+
+    console.log(name);
+    console.log(typeof born);
+    editAuthor({
+      variables: {
+        name,
+        setBornTo: born,
+      },
+    });
+ 
+    console.log("add book...");
+
+    setName("");
+    setBorn("");
+  };
 
   return (
     <div>
@@ -33,6 +56,25 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      <h3>set birthyear</h3>
+      <form onSubmit={submit}>
+        <div>
+          name
+          <input
+            value={name}
+            onChange={({ target }) => setName(target.value)}
+          />
+        </div>
+        <div>
+          born
+          <input
+            type="number"
+            value={born}
+            onChange={({ target }) => setBorn(parseInt(target.value))}
+          />
+        </div>
+        <button type="submit">update author</button>
+      </form>
     </div>
   );
 };
