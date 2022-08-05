@@ -52,17 +52,15 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      return books.filter(
-        (b) =>
-          (!args.author || b.author === args.author) &&
-          (!args.genre || b.genres.includes(args.genre))
-      );
+    bookCount: async () => Book.collection.countDocuments(),
+    authorCount: async () => Author.collection.countDocuments(),
+    allBooks: async (root, args) => {
+      console.log(args.genre);
+      const books = await Book.find({ genres: args.genre });
+      return books;
     },
-  //   allAuthors: () => authors,
-  // },
+    allAuthors: async () => Author.find({}),
+  },
 
   Mutation: {
     addBook: async (root, args) => {
@@ -76,19 +74,15 @@ const resolvers = {
         const author = await Author.findOne({ name: args.author });
         var id = author._id.toString();
       }
-      const proposed = { ...args, author: id.toString() }
+      const proposed = { ...args, author: id.toString() };
       console.log("Proposed:", proposed);
       const book = new Book(proposed);
       return book.save();
     },
-    editAuthor: (root, args) => {
-      const author = authors.find((a) => a.name === args.name);
-      if (!author) {
-        return null;
-      }
-      const updatedAuthor = { ...author, born: args.setBornTo };
-      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a));
-      return updatedAuthor;
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name });
+      author.born = args.setBornTo;
+      return author.save();
     },
   },
 
@@ -98,7 +92,6 @@ const resolvers = {
     },
   },
 };
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
