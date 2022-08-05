@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer, gql, UserInputError } = require("apollo-server");
 const mongoose = require("mongoose");
 const Book = require("./models/book");
 const Author = require("./models/author");
@@ -13,8 +13,6 @@ mongoose
   .catch((e) => {
     console.log("Error connecting to DB:", e.message);
   });
-
-let authors = [];
 
 const typeDefs = gql`
   type Author {
@@ -68,27 +66,47 @@ const resolvers = {
       const authors = (await Author.find({})).map((a) => a.name);
       if (!authors.includes(args.author)) {
         const author = new Author({ name: args.author });
-        const savedAuthor = await author.save();
-        var id = savedAuthor._id.toString();
+        try {
+          await author.save();
+        } catch (e) {
+          throw new UserInputError(e.message, {
+            invalidArgs: args,
+          });
+        }
+        var id = author._id.toString();
       } else {
         const author = await Author.findOne({ name: args.author });
         var id = author._id.toString();
       }
-      const proposed = { ...args, author: id.toString() };
-      console.log("Proposed:", proposed);
-      const book = new Book(proposed);
-      return book.save();
+      const book = new Book({ ...args, author: id.toString() });
+      try {
+        await book.save();
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args,
+        });
+      }
+      return book;
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name });
       author.born = args.setBornTo;
-      return author.save();
+      try {
+        author.save();
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args,
+        });
+      }
+      return author;
     },
   },
 
   Author: {
-    bookCount: ({ name, genre }) => {
-      return books.filter((b) => b.author === name).length;
+    bookCount: async ({ name, genre }) => {
+      const authorIdWithName = (await Author.findOne({ name: name })).id;
+      const all = await Book.find({})
+      return all.filter(b => b.author.toString() === authorIdWithName).length;
     },
   },
 };
