@@ -1,4 +1,9 @@
-const { ApolloServer, gql, UserInputError, AuthenticationError } = require("apollo-server");
+const {
+  ApolloServer,
+  gql,
+  UserInputError,
+  AuthenticationError,
+} = require("apollo-server");
 const mongoose = require("mongoose");
 const Book = require("./models/book");
 const Author = require("./models/author");
@@ -70,8 +75,8 @@ const resolvers = {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      console.log(args.genre);
-      const books = await Book.find({ genres: args.genre });
+      const searchParameter = args.genre == null ? {} : { genres: args.genre };
+      const books = await Book.find(searchParameter);
       return books;
     },
     allAuthors: async () => Author.find({}),
