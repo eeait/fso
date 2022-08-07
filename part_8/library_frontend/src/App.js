@@ -9,7 +9,7 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Recommendations from "./components/Recommendations";
-import { BOOK_ADDED, LOGIN } from "./queries";
+import { ALL_BOOKS, BOOK_ADDED, LOGIN } from "./queries";
 
 const Notification = ({ notification }) => {
   return <b>{notification}</b>;
@@ -93,8 +93,15 @@ const App = () => {
   }, []);
 
   useSubscription(BOOK_ADDED, {
-    onSubscriptionData: ({ onSubscriptionData }) => {
-      window.alert("NEW BOOK");
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded;
+      console.log(addedBook)
+      notify(`New Book Added: ${addedBook.title}`);
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(addedBook),
+        };
+      });
     },
   });
 
