@@ -1,10 +1,15 @@
-import { useApolloClient, useMutation } from "@apollo/client";
+import {
+  useApolloClient,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from "@apollo/client";
 import { useEffect, useState } from "react";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Recommendations from "./components/Recommendations";
-import { LOGIN } from "./queries";
+import { BOOK_ADDED, LOGIN } from "./queries";
 
 const Notification = ({ notification }) => {
   return <b>{notification}</b>;
@@ -64,7 +69,11 @@ const Buttons = ({ loggedIn, setPage, logOut }) => {
       <button onClick={() => setPage("authors")}>authors</button>
       <button onClick={() => setPage("books")}>books</button>
       {loggedIn && <button onClick={() => setPage("add")}>add book</button>}
-      {loggedIn && <button onClick={() => setPage("recommendations")}>recommendations</button>}
+      {loggedIn && (
+        <button onClick={() => setPage("recommendations")}>
+          recommendations
+        </button>
+      )}
       {loggedIn && <button onClick={() => logOut()}>logout</button>}
     </div>
   );
@@ -77,11 +86,17 @@ const App = () => {
   const client = useApolloClient();
 
   useEffect(() => {
-    const tokenFromStorage = localStorage.getItem("library-user-token")
+    const tokenFromStorage = localStorage.getItem("library-user-token");
     if (tokenFromStorage) {
-      setToken(tokenFromStorage)
+      setToken(tokenFromStorage);
     }
-  }, [])
+  }, []);
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ onSubscriptionData }) => {
+      window.alert("NEW BOOK");
+    },
+  });
 
   const notify = (notification) => {
     setNotification(notification);
