@@ -38,8 +38,6 @@ const Authors = (props) => {
     setBorn("");
   };
 
-  console.log(allAuthors.map((a) => a.name));
-
   return (
     <div>
       <h2>authors</h2>
